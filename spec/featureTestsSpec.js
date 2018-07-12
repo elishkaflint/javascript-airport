@@ -1,7 +1,6 @@
 describe("airport", function() {
   var airport;
   var plane;
-  var weather;
 
   beforeEach(function(){
     airport = new Airport(10);
@@ -13,7 +12,7 @@ describe("airport", function() {
   // I want to instruct a plane to land at an airport
   describe ('.land', function() {
     it('instructs a plane to land', function() {
-      spyOn(airport, 'weather').and.returnValue('notStormy');
+      spyOn(airport, '_isStormy').and.returnValue(false);
       airport.land(plane);
       expect(airport.planes).toContain(plane);
     });
@@ -21,19 +20,18 @@ describe("airport", function() {
     // To ensure safety
     // I want to prevent landing when weather is stormy
     it('prevents a plane landing when its stormy', function() {
-      spyOn(airport, 'weather').and.returnValue('Stormy');
+      spyOn(airport, '_isStormy').and.returnValue(true);
       expect(function(){airport.land(plane)}).toThrow(new Error('Too stormy to land'));
     });
     // As an air traffic controller
     // To ensure safety
     // I want to prevent landing when the airport is full
     it('prevents a plane landing when the airport is full', function() {
-      spyOn(airport, 'weather').and.returnValue('notStormy');
+      spyOn(airport, '_isStormy').and.returnValue(false);
       var count;
       for (count = 0; count < 10; count++) {
         airport.land(plane);
       }
-      airport.planes
       expect(function(){airport.land(plane)}).toThrow(new Error('Airport is full'));
     });
   });
@@ -43,7 +41,7 @@ describe("airport", function() {
   // I want to instruct a plane to take off from an airport and confirm that it is no longer in the airport
   describe('.takeOff', function() {
     it('instructs a plane to take off', function() {
-      spyOn(airport, 'weather').and.returnValue('notStormy');
+      spyOn(airport, '_isStormy').and.returnValue(false);
       airport.land(plane);
       airport.takeOff(plane);
       expect(airport.planes).not.toContain(plane);
@@ -52,10 +50,10 @@ describe("airport", function() {
     // To ensure safety
     // I want to prevent takeoff when weather is stormy
     it('prevents a plane taking off when its stormy', function() {
-      var weatherSpy = spyOn(airport,'weather');
-      weatherSpy.and.returnValue('notStormy');
+      var weatherSpy = spyOn(airport,'_isStormy');
+      weatherSpy.and.returnValue(false);
       airport.land(plane);
-      weatherSpy.and.returnValue('Stormy');
+      weatherSpy.and.returnValue(true);
       expect(function(){airport.takeOff()}).toThrow(new Error('Too stormy to take off'));
     });
   });;
