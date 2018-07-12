@@ -52,7 +52,10 @@ describe("airport", function() {
     // To ensure safety
     // I want to prevent takeoff when weather is stormy
     it('prevents a plane taking off when its stormy', function() {
-      spyOn(airport, 'weather').and.returnValue('Stormy');
+      var weatherSpy = spyOn(airport,'weather');
+      weatherSpy.and.returnValue('notStormy');
+      airport.land(plane);
+      weatherSpy.and.returnValue('Stormy');
       expect(function(){airport.takeOff()}).toThrow(new Error('Too stormy to take off'));
     });
   });;
