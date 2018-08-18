@@ -62,7 +62,7 @@ describe('airport', function() {
   describe(".takeOff", function() {
     describe("when its stormy", function() {
       it('returns an error', function() {
-        var weatherSpy = spyOn(airport,'_isStormy')
+        var weatherSpy = spyOn(airport,'_isStormy');
         weatherSpy.and.returnValue(false);
         airport.land(plane);
         weatherSpy.and.returnValue(true);
